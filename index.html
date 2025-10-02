@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enunciado — Desafio ⚙️ Semáforo Inteligente (PPCP)</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Dark style (tudo em modo escuro, inclusive tabelas) -->
+  <style>
+    :root{
+      --bg:#0b0f19; --panel:#0f1626; --ink:#e9ecef; --sub:#94a3b8;
+    }
+    html,body{scroll-behavior:smooth;}
+    body{background:var(--bg); color:var(--ink);}
+    .navbar, .bg-dark{background:#0a0f1a !important;}
+    .hero{
+      background: radial-gradient(900px 520px at 12% 25%, rgba(13,110,253,.15), transparent 60%),
+                  radial-gradient(700px 420px at 85% 15%, rgba(25,135,84,.12), transparent 60%);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    img.rounded-3{box-shadow: 0 10px 30px rgba(0,0,0,.35);}
+    .card{background:var(--panel); border:1px solid rgba(255,255,255,.08);}
+    .section-title{display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem}
+    .section-title .emoji{font-size:1.5rem}
+    /* Tabelas dark */
+    .table{--bs-table-bg: var(--panel); --bs-table-color: var(--ink);
+           --bs-table-border-color: rgba(255,255,255,.14);}
+    .table thead th{background: rgba(255,255,255,.06); color: var(--ink);
+                    border-bottom:1px solid rgba(255,255,255,.18);}
+    .table tfoot th{background: rgba(255,255,255,.05); color: var(--ink);}
+    .text-secondary, .form-text, small{color:var(--sub) !important;}
+    pre.code{background:var(--panel); border:1px solid rgba(255,255,255,.08); padding:12px; border-radius:10px}
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <span class="navbar-brand">🚦 Enunciado — Desafio de PPCP: Semáforo Inteligente</span>
+  
+    <div class="ms-auto">
+      <a class="btn btn-primary btn-sm" href="gabarito.html" title="Ver gabarito completo">Ver Gabarito</a>
+    </div></div>
+</nav>
+
+<header class="hero py-5">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <h1 class="display-6 fw-bold">Objetivo</h1>
+        <p class="lead">
+          Montar e validar um <strong>semáforo eletrônico</strong> com Arduino a partir do kit fornecido,
+          aplicando <em>BOM</em>, <em>Árvore do Produto</em>, <em>Sequenciamento</em>, <em>CQ</em>, <em>MRP</em> e <em>Fluxograma</em>.
+          O software já está carregado na placa.
+        </p>
+        <div class="small text-secondary">⚠️ Esta página contém apenas o <strong>enunciado</strong>. As respostas e cálculos serão apresentados no gabarito ao final.</div>
+      </div>
+      <div class="col-lg-6 text-center">
+        <img src="esquematico.png" alt="Esquemático de ligação do semáforo com Arduino" class="img-fluid rounded-3">
+        <div class="mt-2 small text-secondary">Figura 1 — Esquemático de referência para montagem elétrica.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="py-5">
+  <div class="container">
+
+    <!-- Regras -->
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Regras do Desafio 📋</h2>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-transparent text-light">1) A turma será dividida em <strong>2 equipes</strong>; cada equipe recebe um kit completo.</li>
+        <li class="list-group-item bg-transparent text-light">2) Um representante deve <strong>cronometrar o tempo total de montagem</strong> (minutos).</li>
+        <li class="list-group-item bg-transparent text-light">3) O código da placa Arduino já está configurado.</li>
+        <li class="list-group-item bg-transparent text-light">4) Registrem decisões (pinos, materiais utilizados, sequência, verificações de CQ) para discussão.</li>
+      </ul>
+    </section>
+
+    <!-- BOM com preços unitários (dados fornecidos) -->
+    <section id="bom" class="mb-5">
+      <h2 class="h4 mb-3">a) Lista de Materiais (BOM) 🧰</h2>
+      <p class="text-secondary">Os <strong>preços unitários</strong> abaixo são fornecidos para viabilizar os cálculos. Preencham os <strong>totais</strong> durante a atividade.</p>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th class="text-center">Qtde (Kit)</th>
+              <th class="text-end">Preço unit. (R$)</th>
+              <th class="text-end">Total (R$)</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Arduino Uno R3 (compatível)</td><td class="text-center">1</td><td class="text-end">85,00</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Protoboard 400 pts</td><td class="text-center">1</td><td class="text-end">20,00</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>LED 5mm vermelho</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>LED 5mm amarelo</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>LED 5mm verde</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Resistor 220Ω</td><td class="text-center">3</td><td class="text-end">0,10</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Resistor 10kΩ</td><td class="text-center">1</td><td class="text-end">0,10</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Botão (push button)</td><td class="text-center">1</td><td class="text-end">2,50</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Jumpers macho-macho (10 un)</td><td class="text-center">1</td><td class="text-end">4,00</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Cabo USB A-B</td><td class="text-center">1</td><td class="text-end">12,00</td><td class="text-end">—</td><td></td></tr>
+            <tr><td>Suporte/caixa acrílica (opcional)</td><td class="text-center">1</td><td class="text-end">18,00</td><td class="text-end">—</td><td></td></tr>
+          </tbody>
+          <tfoot>
+            <tr><th colspan="3" class="text-end">Subtotal componentes</th><th class="text-end">—</th><th></th></tr>
+            <tr><th colspan="3" class="text-end">Mão de obra (R$ 45,00/h × tempo/60)</th><th class="text-end">—</th><th></th></tr>
+            <tr><th colspan="3" class="text-end">Custo por kit</th><th class="text-end">—</th><th></th></tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Árvore do Produto (skeleton) -->
+    <section id="arvore" class="mb-5">
+      <h2 class="h4 mb-3">b) Árvore do Produto 🌳</h2>
+      <p class="text-secondary">Completem a estrutura do produto até o <strong>nível 2</strong> (subconjuntos e componentes). Podem usar o formato abaixo:</p>
+<pre class="code small">
+Nível 0: Produto Final — Semáforo Inteligente
+├─ Nível 1: _______________________________
+│  ├─ __________________ ( )
+│  ├─ __________________ ( )
+│  └─ __________________ ( )
+├─ Nível 1: _______________________________
+│  ├─ __________________ ( )
+│  ├─ __________________ ( )
+│  └─ __________________ ( )
+└─ Nível 1: _______________________________
+   └─ __________________ ( )
+</pre>
+    </section>
+
+    <!-- Sequenciamento -->
+    <section id="sequencia" class="mb-5">
+      <h2 class="h4 mb-3">c) Sequenciamento Lógico (passo a passo) 🧭</h2>
+      <p class="text-secondary">Descrevam o passo a passo de montagem e testes (sem revelar a solução). Usem a lista abaixo como roteiro de registro.</p>
+      <ol class="list-group list-group-numbered">
+        <li class="list-group-item bg-transparent text-light">Conferir BOM e organizar o kit.</li>
+        <li class="list-group-item bg-transparent text-light">Preparar a protoboard (5V e GND).</li>
+        <li class="list-group-item bg-transparent text-light">Montagem dos LEDs com resistores.</li>
+        <li class="list-group-item bg-transparent text-light">Montagem do botão (indicar pull-up/pull-down).</li>
+        <li class="list-group-item bg-transparent text-light">Definir <strong>pinos do Arduino</strong> utilizados (preencher a tabela abaixo).</li>
+        <li class="list-group-item bg-transparent text-light">Checagens intermediárias de CQ.</li>
+        <li class="list-group-item bg-transparent text-light">Teste do ciclo do semáforo e CQ final.</li>
+        <li class="list-group-item bg-transparent text-light">Registrar o <strong>tempo total de montagem</strong>.</li>
+      </ol>
+
+      <div class="table-responsive mt-3">
+        <table class="table">
+          <thead><tr><th>Sinal/Dispositivo</th><th>Pino Arduino</th><th>Observações</th></tr></thead>
+          <tbody>
+            <tr><td>LED Vermelho</td><td>_____</td><td></td></tr>
+            <tr><td>LED Amarelo</td><td>_____</td><td></td></tr>
+            <tr><td>LED Verde</td><td>_____</td><td></td></tr>
+            <tr><td>Botão (S1)</td><td>_____</td><td>Pull-up / Pull-down</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CQ -->
+    <section id="cq" class="mb-5">
+      <h2 class="h4 mb-3">d) CQ — Controle de Qualidade 🛡️</h2>
+      <p class="text-secondary">Elaborem <strong>fases intermediárias</strong> e <strong>finais</strong> de CQ para evitar retrabalho e garantir a confiabilidade do produto. Registrem os itens a verificar.</p>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100"><div class="card-body">
+            <h5>Intermediário 🔧</h5>
+            <ul class="mb-0">
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+            </ul>
+          </div></div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100"><div class="card-body">
+            <h5>Final 🏁</h5>
+            <ul class="mb-0">
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+              <li>____________________________________________</li>
+            </ul>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MRP: dados para cálculo (2 kits) -->
+    <section id="mrp" class="mb-5">
+      <h2 class="h4 mb-3">e) MRP — Planejamento de Necessidades 🧮</h2>
+      <p class="text-secondary">
+        Considerem <strong>2 kits</strong> (uma equipe por kit). Usem a árvore do produto e os
+        <strong>preços unitários</strong> da BOM para explodir quantidades e custos. Preencham apenas a coluna final.
+      </p>
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr><th>Nível</th><th>Item</th><th>Qtde por kit</th><th>Qtde p/ turma (2 kits)</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Semáforo (produto final)</td><td>1</td><td>—</td></tr>
+            <tr><td>1</td><td>Módulo Eletrônico</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Arduino Uno R3</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Protoboard 400 pts</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Jumpers (10 un)</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Cabo USB A-B</td><td>1</td><td>—</td></tr>
+            <tr><td>1</td><td>Conjunto Sinalização</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>LED 5mm vermelho</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>LED 5mm amarelo</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>LED 5mm verde</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Resistor 220Ω</td><td>3</td><td>—</td></tr>
+            <tr><td>1</td><td>Interface Usuário</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Botão (push)</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>Resistor 10kΩ</td><td>1</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert alert-secondary">Mão de obra: <strong>R$ 45,00/h</strong> proporcional ao tempo cronometrado da equipe.</div>
+    </section>
+
+    <!-- Fluxograma: template sem solução -->
+    <section id="fluxo" class="mb-5">
+      <h2 class="h4 mb-3">f) Fluxograma (template) 🗺️</h2>
+      <p class="text-secondary">Construa o fluxograma do processo sem revelar a solução aqui. Use o template abaixo e substitua os campos em branco.</p>
+<pre class="mermaid">
+flowchart LR
+  A[Etapa 1: __________] --> B[Etapa 2: __________]
+  B --> C[Etapa 3: __________]
+  C --> D[Etapa 4: __________]
+  D --> E[Etapa 5: __________]
+  E --> F[Etapa 6: __________]
+  F --> G[Etapa 7: __________]
+  G --> H[Etapa 8: __________]
+</pre>
+    </section>
+
+  </div>
+</main>
+
+<footer class="py-4 mt-5 border-top border-secondary-subtle">
+  <div class="container small">© 2025 — Enunciado do Desafio PPCP • Uso em sala</div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad:true, theme:'dark' });</script>
+</body>
+</html>

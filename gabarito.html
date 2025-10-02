@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gabarito — Desafio ⚙️ Semáforo Inteligente (PPCP) — 2 Equipes</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Dark style -->
+  <style>
+    :root{ --bg:#0b0f19; --panel:#0f1626; --ink:#e9ecef; --sub:#94a3b8; --accent:#0d6efd;  --accent:#7dd3fc;}
+    html,body{scroll-behavior:smooth;}
+    body{background:var(--bg); color:var(--ink);}
+    .navbar, .bg-dark{background:#0a0f1a !important;}
+    .hero{
+      background: radial-gradient(900px 520px at 12% 25%, rgba(13,110,253,.15), transparent 60%),
+                  radial-gradient(700px 420px at 85% 15%, rgba(25,135,84,.12), transparent 60%);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    img.rounded-3{box-shadow: 0 10px 30px rgba(0,0,0,.35);}
+    .card{background:var(--panel); border:1px solid rgba(255,255,255,.08);}
+    .section-title{display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem}
+    .section-title .emoji{font-size:1.5rem}
+    /* Tabelas dark */
+    .table{--bs-table-bg: var(--panel); --bs-table-color: var(--ink);
+           --bs-table-border-color: rgba(255,255,255,.14);}
+    .table thead th{background: rgba(255,255,255,.06); color: var(--ink);
+                    border-bottom:1px solid rgba(255,255,255,.18);}
+    .table tfoot th{background: rgba(255,255,255,.05); color: var(--ink);}
+    .text-secondary, .form-text, small{color:var(--sub) !important;}
+    pre.code{background:var(--panel); border:1px solid rgba(255,255,255,.08); padding:12px; border-radius:10px}
+    .badge-pin{background:#1f2937; border:1px solid rgba(255,255,255,.1)}
+  
+    /* === CQ (Controle de Qualidade) — ajustes de contraste e responsividade === */
+    #cq .card{background:var(--panel);border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 16px rgba(0,0,0,.25)}
+    #cq .card-body{padding:1rem 1.25rem}
+    #cq h5{margin-bottom:.75rem;font-weight:600;letter-spacing:.2px}
+    #cq ul{margin-bottom:0}
+    #cq li{color:var(--ink);opacity:.92;line-height:1.55;padding-left:.25rem;margin:.35rem 0}
+    #cq li::marker{color:var(--accent)}
+    @media (max-width: 576px){
+      #cq .card-body{padding:0.875rem 1rem}
+    }
+    
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">🔓 Gabarito — Semáforo Inteligente (PPCP) • 2 equipes</a>
+  </div>
+</nav>
+
+<header class="hero py-5">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1 class="display-6 fw-bold">Resolução completa</h1>
+        <p class="lead">Gabarito com <strong>todas as respostas</strong>: BOM com custos atualizados, Árvore do Produto, Sequenciamento, CQ, MRP (nível 1 e 2) para <strong>2 kits</strong>, pinos do Arduino e <strong>fluxograma final</strong>. Cálculo automático de mão de obra a <strong>R$ 45,00/h</strong>.</p>
+        <div class="small text-secondary">Obs.: preços simulados para fins didáticos. Jumpers: pacote 10 un por R$ 4,00, usando 6 un (rateio R$ <strong>2,40/kit</strong>). Suporte/caixa: <strong>removido</strong>.</div>
+      </div>
+      <div class="col-lg-5 text-center">
+        <img src="esquematico.png" alt="Esquemático do semáforo com Arduino" class="img-fluid rounded-3">
+        <div class="mt-2 small text-secondary">Figura 1 — Referência de ligação (Arduino + protoboard).</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="py-5">
+  <div class="container">
+
+    <!-- 1. Pinos do Arduino -->
+    <section id="pinos" class="mb-5">
+      <div class="section-title"><span class="emoji">🔌</span><h2 class="h4 m-0">1) Mapeamento de Pinos do Arduino</h2></div>
+      <ul>
+        <li><span class="badge badge-pin">LED Vermelho</span> → <strong>D8</strong> (série com resistor <strong>220Ω</strong>)</li>
+        <li><span class="badge badge-pin">LED Amarelo</span> → <strong>D7</strong> (série com resistor <strong>220Ω</strong>)</li>
+        <li><span class="badge badge-pin">LED Verde</span> → <strong>D6</strong> (série com resistor <strong>220Ω</strong>)</li>
+        <li><span class="badge badge-pin">Botão S1</span> → <strong>D2</strong> (com resistor <strong>10kΩ</strong> em <em>pull-down</em>; alternativa: <code>INPUT_PULLUP</code> com lógica invertida)</li>
+        <li><strong>Alimentação</strong>: 5V e GND nos trilhos laterais da protoboard.</li>
+      </ul>
+    </section>
+
+    <!-- 2. BOM completa (refatorada) -->
+    <section id="bom" class="mb-5">
+      <div class="section-title"><span class="emoji">🧰</span><h2 class="h4 m-0">2) BOM — Bill of Materials (com preços simulados)</h2></div>
+      <p>Quantidades <em>por kit</em>. Subtotal de componentes por kit ao final.</p>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th class="text-center">Qtde (kit)</th>
+              <th class="text-end">Preço unit. (R$)</th>
+              <th class="text-end">Total (R$)</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Arduino Uno R3 (compatível)</td><td class="text-center">1</td><td class="text-end">85,00</td><td class="text-end">85,00</td><td></td></tr>
+            <tr><td>Protoboard 400 pts</td><td class="text-center">1</td><td class="text-end">20,00</td><td class="text-end">20,00</td><td></td></tr>
+            <tr><td>LED 5mm vermelho</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">0,80</td><td></td></tr>
+            <tr><td>LED 5mm amarelo</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">0,80</td><td></td></tr>
+            <tr><td>LED 5mm verde</td><td class="text-center">1</td><td class="text-end">0,80</td><td class="text-end">0,80</td><td></td></tr>
+            <tr><td>Resistor 220Ω</td><td class="text-center">3</td><td class="text-end">0,10</td><td class="text-end">0,30</td><td></td></tr>
+            <tr><td>Resistor 10kΩ</td><td class="text-center">1</td><td class="text-end">0,10</td><td class="text-end">0,10</td><td></td></tr>
+            <tr><td>Botão (push button)</td><td class="text-center">1</td><td class="text-end">2,50</td><td class="text-end">2,50</td><td></td></tr>
+            <tr>
+              <td>Jumpers macho–macho (pacote 10 un)</td>
+              <td class="text-center">6 un usadas</td>
+              <td class="text-end">4,00 (pacote)</td>
+              <td class="text-end">2,40</td>
+              <td>Rateio: 6/10 × R$ 4,00 = R$ 2,40 por kit</td>
+            </tr>
+            <tr><td>Cabo USB A-B</td><td class="text-center">1</td><td class="text-end">12,00</td><td class="text-end">12,00</td><td></td></tr>
+            <!-- Suporte/caixa acrílica removido -->
+          </tbody>
+          <tfoot>
+            <tr class="table-dark">
+              <th colspan="4" class="text-end">Subtotal componentes (por kit)</th>
+              <th class="text-end">124,70</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="small text-secondary">
+        Subtotal por kit: 85 + 20 + 0,8 + 0,8 + 0,8 + 0,3 + 0,1 + 2,5 + 2,4 + 12 = <strong>R$ 124,70</strong>.
+      </div>
+    </section>
+
+    <!-- 3. Árvore do Produto -->
+    <section id="arvore" class="mb-5">
+      <div class="section-title"><span class="emoji">🌳</span><h2 class="h4 m-0">3) Árvore do Produto (nível 0 → 2)</h2></div>
+<pre class="code small">
+Nível 0: Produto Final — Semáforo Inteligente
+├─ Nível 1: Módulo Eletrônico
+│  ├─ Arduino Uno R3 (1)
+│  ├─ Protoboard 400 pts (1)
+│  ├─ Jumpers macho-macho (6 un)
+│  └─ Cabo USB A-B (1)
+├─ Nível 1: Conjunto de Sinalização
+│  ├─ LED 5mm vermelho (1) + Resistor 220Ω (1)
+│  ├─ LED 5mm amarelo (1) + Resistor 220Ω (1)
+│  └─ LED 5mm verde  (1)  + Resistor 220Ω (1)
+└─ Nível 1: Interface do Usuário
+   └─ Botão (push) (1) + Resistor 10kΩ (1)
+</pre>
+    </section>
+
+    <!-- 4. Sequenciamento -->
+    <section id="sequencia" class="mb-5">
+      <div class="section-title"><span class="emoji">🧭</span><h2 class="h4 m-0">4) Sequenciamento Lógico (passo a passo)</h2></div>
+      <ol>
+        <li><strong>Conferir BOM</strong> e separar subconjuntos (Módulo, Sinalização, Interface).</li>
+        <li><strong>Preparar trilhos</strong> de 5V e GND na protoboard; checar continuidade.</li>
+        <li><strong>Instalar LEDs</strong> (R/A/V) com <strong>220Ω</strong> em série (ânodo → pino; cátodo → GND).</li>
+        <li><strong>Instalar Botão S1</strong> no pino D2 com <strong>10kΩ</strong> (pull-down) ou <em>INPUT_PULLUP</em> (lógica invertida).</li>
+        <li><strong>Revisar polaridades</strong>, resistores, fios; buscar curtos.</li>
+        <li><strong>CQ Intermediário</strong>: continuidade, polaridade, valores de resistores, leitura do botão.</li>
+        <li><strong>Conectar USB</strong> e energizar a placa; observar aquecimento.</li>
+        <li><strong>Testar sequência</strong> Verde → Amarelo → Vermelho.</li>
+        <li><strong>CQ Final</strong>: ciclo estável ≥2 min; acabamento e fixação.</li>
+        <li><strong>Registrar tempo</strong> total por equipe (min).</li>
+      </ol>
+    </section>
+
+    <!-- 5. CQ -->
+    <section id="cq" class="mb-5">
+      <div class="section-title"><span class="emoji">🛡️</span><h2 class="h4 m-0">5) CQ — Controle de Qualidade (Intermediário e Final)</h2></div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5>Intermediário 🔧</h5>
+              <ul class="mb-0">
+                <li>Continuidade 5V/GND nos trilhos.</li>
+                <li>Polaridade dos LEDs correta e 3× resistores 220Ω presentes.</li>
+                <li>Botão S1 com 10kΩ em pull-down (ou lógica estável em INPUT_PULLUP).</li>
+                <li>Ausência de curtos; fios organizados.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5>Final 🏁</h5>
+              <ul class="mb-0">
+                <li>Sequência Verde → Amarelo → Vermelho com tempos regulares.</li>
+                <li>Resposta ao botão conforme o código.</li>
+                <li>Sem aquecimento anormal; cabos firmes; acabamento limpo.</li>
+              </ul>
+              <div class="alert alert-info mt-3"><strong>Racional:</strong> fases de CQ reduzem retrabalho e aumentam confiabilidade.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. MRP (nível 1 e 2) + custos para 2 kits (refatorado) -->
+    <section id="mrp" class="mb-5">
+      <div class="section-title"><span class="emoji">🧮</span><h2 class="h4 m-0">6) MRP — Explosão de Necessidades (2 kits) + Custos</h2></div>
+      <p>Explosão com <strong>quantidades por kit</strong> e para <strong>2 kits</strong>, <strong>preço unitário</strong> e <strong>custo estendido</strong>. Jumpers com rateio (6/10 do pacote).</p>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Nível</th>
+              <th>Item</th>
+              <th class="text-center">Qtde/kit</th>
+              <th class="text-center">Qtde (2 kits)</th>
+              <th class="text-end">Preço unit. (R$)</th>
+              <th class="text-end">Custo (2 kits) (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>Semáforo (produto final)</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">—</td><td class="text-end">—</td></tr>
+
+            <tr><td>1</td><td>Módulo Eletrônico</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">—</td><td class="text-end">—</td></tr>
+            <tr><td>2</td><td>Arduino Uno R3</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">85,00</td><td class="text-end">170,00</td></tr>
+            <tr><td>2</td><td>Protoboard 400 pts</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">20,00</td><td class="text-end">40,00</td></tr>
+            <tr>
+              <td>2</td><td>Jumpers (6 un usadas; pacote 10 un)</td>
+              <td class="text-center">6</td><td class="text-center">12</td>
+              <td class="text-end">2,40 (rateio/kit)</td>
+              <td class="text-end">4,80</td>
+            </tr>
+            <tr><td>2</td><td>Cabo USB A-B</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">12,00</td><td class="text-end">24,00</td></tr>
+
+            <tr><td>1</td><td>Conjunto de Sinalização</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">—</td><td class="text-end">—</td></tr>
+            <tr><td>2</td><td>LED 5mm vermelho</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">0,80</td><td class="text-end">1,60</td></tr>
+            <tr><td>2</td><td>LED 5mm amarelo</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">0,80</td><td class="text-end">1,60</td></tr>
+            <tr><td>2</td><td>LED 5mm verde</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">0,80</td><td class="text-end">1,60</td></tr>
+            <tr><td>2</td><td>Resistor 220Ω</td><td class="text-center">3</td><td class="text-center">6</td><td class="text-end">0,10</td><td class="text-end">0,60</td></tr>
+
+            <tr><td>1</td><td>Interface do Usuário</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">—</td><td class="text-end">—</td></tr>
+            <tr><td>2</td><td>Botão (push)</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">2,50</td><td class="text-end">5,00</td></tr>
+            <tr><td>2</td><td>Resistor 10kΩ</td><td class="text-center">1</td><td class="text-center">2</td><td class="text-end">0,10</td><td class="text-end">0,20</td></tr>
+          </tbody>
+          <tfoot>
+            <tr class="table-dark">
+              <th colspan="5" class="text-end">Subtotal componentes (2 kits)</th>
+              <th class="text-end">249,40</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="alert alert-secondary">
+        <strong>Mão de obra</strong>: R$ 45,00/h por equipe. Custo de MO por kit = (tempo em minutos ÷ 60) × 45,00.
+        Abaixo, calcule o custo final de cada equipe e o total da turma (2 equipes).
+      </div>
+
+      <!-- Inputs p/ tempos e cálculo automático -->
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Tempo Equipe 1 (min)</label>
+          <input type="number" class="form-control" id="t1" min="0" step="1" value="18">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Tempo Equipe 2 (min)</label>
+          <input type="number" class="form-control" id="t2" min="0" step="1" value="20">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Custo-hora (R$)</label>
+          <input type="number" class="form-control" id="custoHora" min="0" step="0.01" value="45">
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Equipe</th>
+              <th class="text-end">Subtotal componentes (R$)</th>
+              <th class="text-end">Mão de obra (R$)</th>
+              <th class="text-end">Custo total por kit (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Equipe 1</td>
+              <td class="text-end" id="comp1">124,70</td>
+              <td class="text-end" id="mo1">—</td>
+              <td class="text-end fw-bold" id="tot1">—</td>
+            </tr>
+            <tr>
+              <td>Equipe 2</td>
+              <td class="text-end" id="comp2">124,70</td>
+              <td class="text-end" id="mo2">—</td>
+              <td class="text-end fw-bold" id="tot2">—</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="table-dark">
+              <th>Total da turma (2 kits)</th>
+              <th class="text-end" id="compTurma">249,40</th>
+              <th class="text-end" id="moTurma">—</th>
+              <th class="text-end" id="totTurma">—</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="small text-secondary">Dica: comparem <em>custo por minuto</em> (custo total / tempo em min) entre as equipes.</div>
+    </section>
+
+    <!-- 7. Fluxograma solução -->
+    <section id="fluxo" class="mb-5">
+      <div class="section-title"><span class="emoji">🗺️</span><h2 class="h4 m-0">7) Fluxograma — Solução</h2></div>
+<pre class="mermaid">
+flowchart LR
+  A[Receber kit 📦] --> B[Conferir BOM ✅]
+  B --> C[Preparar trilhos 5V/GND 🔌]
+  C --> D[Instalar LEDs + 220Ω 💡]
+  D --> E[Instalar botão S1 + 10kΩ 🧷]
+  E --> F[CQ Intermediário 🔍]
+  F --> G[Conectar USB ⚡]
+  G --> H[Testar sequência: Verde→Amarelo→Vermelho 🔄]
+  H --> I[CQ Final 🏁]
+  I --> J[Registrar tempo ⏱️]
+</pre>
+      <p class="small text-secondary">Fluxo alinhado ao passo a passo do gabarito.</p>
+    </section>
+
+  </div>
+</main>
+
+<footer class="py-4 mt-5 border-top border-secondary-subtle">
+  <div class="container small">© 2025 — Gabarito PPCP • Uso didático</div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad:true, theme:'dark' });</script>
+<script>
+  // Cálculo automático de mão de obra e totais (com novos subtotais atualizados)
+  const fmtBR = v => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+  function recalc(){
+    const t1 = Number(document.getElementById('t1').value || 0);
+    const t2 = Number(document.getElementById('t2').value || 0);
+    const ch = Number(document.getElementById('custoHora').value || 45);
+    const compKit = 124.70; // novo subtotal por kit após rateio dos jumpers e remoção da caixa
+
+    const mo1 = (t1/60) * ch;
+    const mo2 = (t2/60) * ch;
+
+    document.getElementById('mo1').textContent = fmtBR(mo1);
+    document.getElementById('mo2').textContent = fmtBR(mo2);
+
+    const tot1 = compKit + mo1;
+    const tot2 = compKit + mo2;
+
+    document.getElementById('tot1').textContent = fmtBR(tot1);
+    document.getElementById('tot2').textContent = fmtBR(tot2);
+
+    document.getElementById('compTurma').textContent = fmtBR(compKit*2);
+    const moTurma = mo1 + mo2;
+    document.getElementById('moTurma').textContent = fmtBR(moTurma);
+    document.getElementById('totTurma').textContent = fmtBR(compKit*2 + moTurma);
+  }
+  ['t1','t2','custoHora'].forEach(id => {
+    document.getElementById(id).addEventListener('input', recalc);
+  });
+  recalc();
+</script>
+
+  <!-- Botão Voltar (flutuante) -->
+  <a href="index.html" class="btn btn-primary position-fixed" style="left:1rem; bottom:1rem; z-index:1030;">
+    ← Voltar
+  </a>
+
+</body>
+</html>
+
+
